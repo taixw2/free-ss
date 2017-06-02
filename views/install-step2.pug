@@ -1,0 +1,18 @@
+extends installLayout
+
+block content
+  
+  h1 填写mysql信息
+
+  form(action="/install/install-step2" method="POST")
+    input(type="text" name="host" placeholder="请输入主机地址，一般为localhost")
+    br
+    br
+    input(type="text" name="user" placeholder="请输入mysql用户名")
+    br
+    br
+    input(type="pass" name="password" placeholder="请输入mysql密码")
+    br
+    br
+    button(type="submit") 提交 
+    button(type="reset") 重置

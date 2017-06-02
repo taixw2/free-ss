@@ -1,0 +1,17 @@
+extends installLayout
+
+block content
+  h1  欢迎，即将开始共享您的Shadowsocks
+  h2  下面开始一些检测...
+
+  ul  
+    li mysql(数据库) #{mysql ? '' : '（请根据对应系统下载mysql--->https://dev.mysql.com/downloads/mysql/<---）'}
+      span(class='fa fa-circle ' + (mysql ? 'green' : 'red'))
+    li shadowsocks 
+      span(class='fa fa-circle ' + (ssserver ? 'green' : 'red'))
+    li crontab(定时器) 
+      span(class='fa fa-circle ' + (crontab ? 'green' : 'red'))
+  
+  button(disabled=!result onclick="location.href='/install/install-step2/'") 下一步 #{!result ? '(请安装完上述软件后重启服务)' : ''}
+  
+
