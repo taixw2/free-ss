@@ -21,15 +21,19 @@ router.get('/install-step2', async (ctx) => {
   await ctx.render('install-step2')
 })
 
-
+/**
+ * 第二步提交表单
+ */
 router.post('/install-step2', async (ctx) => {
+  await require('./install/step1.js')(ctx.request.body)
+  ctx.redirect('/install/install-step3')
+})
 
-  const mysqlConf = ctx.request.body
+/**
+ * 第三步
+ */
+router.get('/install-step3', async (ctx) => {
 
-  
-
-  ctx.body = await require('./install/step1.js')(mysqlConf)
-  
 })
 
 
