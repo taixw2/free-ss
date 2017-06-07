@@ -25,7 +25,7 @@ router.get('/install-step2', async (ctx) => {
  * 第二步提交表单
  */
 router.post('/install-step2', async (ctx) => {
-  await require('./install/step1.js')(ctx.request.body)
+  const result = await require('./install/step1.js')(ctx.request.body)
   ctx.redirect('/install/install-step3')
 })
 

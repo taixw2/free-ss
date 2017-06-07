@@ -20,6 +20,9 @@ module.exports = (conf) => {
    */
   return new Promise(async (resolve, reject) => {
     try{
+
+      
+
       const conn = await connection(conf)
 
       if (!conf.database) {
@@ -30,6 +33,10 @@ module.exports = (conf) => {
       } else {
         await source()
       }
+
+      // await query(conn, 'insert ')
+
+      conn.end()
 
       fs.writeFile(path.resolve(__dirname, '../../sql/conf.json'), JSON.stringify(conf), (err) => {
         if (err) reject(err)
