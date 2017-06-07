@@ -1,6 +1,6 @@
-const _ = require('lodash')
-const mysql = require('mysql')
-const { mysqlConf } = require('./conf.js')
+import _ from 'lodash'
+import mysql from 'mysql'
+import { mysqlConf } from './conf.js'
 
 export function connection(conf) {
   return new Promise((resolve, reject) => {
@@ -19,13 +19,12 @@ export function query(conn, query) {
   return new Promise((resolve, reject) => {
     conn.query(query, (err, rows, fields) => {
       if (err) reject(err)
-
       resolve(rows)
     })
   })
 }
 
-export function commSql(queryString) {  
+export function commSql(queryString) {
   return new Promise(async (resolve, reject) => {
 
     try {
@@ -34,13 +33,13 @@ export function commSql(queryString) {
       const rows = await query(conn, _.trim(queryString))
       resolve(rows)
       conn.end()
-    } catch(e) {
+    } catch (e) {
       reject(e)
     }
 
-    
+
   })
-  
+
 }
 
 

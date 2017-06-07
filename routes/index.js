@@ -1,6 +1,8 @@
-const path = require('path')
-const fs = require('fs')
-const router = require('koa-router')()
+import fs from 'fs'
+import path from 'path'
+import Router from 'koa-router'
+
+const router = Router()
 
 router.get('/', async (ctx, next) => {
 
@@ -33,4 +35,4 @@ router.get('/json', async (ctx, next) => {
   }
 })
 
-module.exports = router
+export default router

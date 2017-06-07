@@ -1,14 +1,15 @@
-const Koa = require('koa')
-const app = new Koa()
-const views = require('koa-views')
-const json = require('koa-json')
-const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
-const logger = require('koa-logger')
+import Koa from 'koa'
+import views from 'koa-views'
+import json from 'koa-json'
+import onerror from 'koa-onerror'
+import bodyparser from 'koa-bodyparser'
+import logger from 'koa-logger'
 
-const index = require('./routes/index')
-const users = require('./routes/users')
-const install = require('./routes/install')
+import index from './routes/index'
+import users from './routes/users'
+import install from './routes/install'
+
+const app = new Koa()
 
 // error handler
 onerror(app)
@@ -38,4 +39,4 @@ app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
 app.use(install.routes(), install.allowedMethods())
 
-module.exports = app
+export default app

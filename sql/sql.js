@@ -2,7 +2,7 @@ import _ from 'lodash'
 import mysql from 'mysql'
 
 
-export class Sql {
+export default class Sql {
 
   /**
    * sql构造器
@@ -17,10 +17,10 @@ export class Sql {
     // 后期sql可改为数组，在query的时候重新排序后生产sql语句，则顺序可打乱,如: select(xxx).limit(0, 5).where({ userid: 0 })
 
     // sqls 
-    // [{
+    // {
     //   sql: '***',
     //   result: '***'
-    // }]
+    // }
   }
   
 
@@ -31,7 +31,7 @@ export class Sql {
    */
   insert(queryParam, table) {
 
-    table = genTable(table)
+    table = this.genTable(table)
 
     if (!_.isPlainObject(queryParam)) return
 
@@ -43,11 +43,11 @@ export class Sql {
       values.push(this.escape(value))
     })
 
-    this.sqls.push([{
+    this.sqls.push({
       type: 'insert',
       sql: `INSERT INTO ${this.table} (${fields.join(',')}) VALUES (${values.join(',')})`,
       result: null,
-    }])
+    })
 
     return this
 
@@ -58,12 +58,12 @@ export class Sql {
    * @param {String} table 
    */
   del(table) {
-    table = genTable(table)
-    this.sqls.push([{
+    table = this.genTable(table)
+    this.sqls.push({
       type: 'delete',
       sql: `DELETE FROM ${table}`,
       result: null,
-    }])
+    })
   }
 
   /**
@@ -73,7 +73,7 @@ export class Sql {
    */
   update(queryParam, table) {
     
-    table = genTable(table)
+    table = this.genTable(table)
 
     if (!_.isPlainObject(queryParam)) return
 
@@ -81,11 +81,11 @@ export class Sql {
       return [key, value].join('=')
     }).join(',')
 
-    this.sqls.push([{
+    this.sqls.push({
       type: 'update',
       sql: `UPDATE ${table} ${queryFields}`,
       result: null,
-    }])
+    })
 
   }
 
@@ -95,7 +95,7 @@ export class Sql {
    */
   select(queryParam, table) {
 
-    table = genTable(table)
+    table = this.genTable(table)
 
     queryParam = this.escape(queryParam)
 
@@ -103,11 +103,11 @@ export class Sql {
       queryParam = queryParam.join(',')
     }
 
-    this.sqls.push([{
+    this.sqls.push({
       type: 'select',
       sql: `SELECT ${queryParam} FROM ${table}`,
       result: null,
-    }])
+    })
 
     return this
 
@@ -150,6 +150,7 @@ export class Sql {
    */
   limit(offset, rows) {
     this.lastSqlJoin(`limit ${[offset, rows].join(',')}`)
+    return this
   }
 
   /**
@@ -162,13 +163,17 @@ export class Sql {
       fields = fields.join(',')
     }
     this.lastSqlJoin(`ORDER BY ${fields} ${asc}`)
+    return this
   }
 
-
+  /**
+   * 查询
+   */
   query() {
     const error = []
     const allResult = _.map(this.sqls, async (v) => {
       try {
+        console.log(v.sql)
         return await this.conn.query(v.sql)
       } catch(e) {
         error.push(e)
@@ -193,17 +198,14 @@ export class Sql {
    * @param {Array, String} tables 
    */
   genTable(tables) {
-
     tables = tables || this.tables
-    
     return _.isArray(tables) ? tables.join(',') : tables
-
   }
 
   // 转义sql语句
   escape(params) {
 
-    if (_.isString(params)) {
+    if (!_.isObject(params)) {
       return mysql.escape(params)
     }
 
@@ -214,7 +216,5 @@ export class Sql {
       })
       return params
     }
-        
   }
-
 }

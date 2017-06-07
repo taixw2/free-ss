@@ -1,6 +1,6 @@
-const shelljs = require('shelljs')
+import shelljs from 'shelljs' 
 
-module.exports = () => {
+export default () => {
   const testList = ['mysql', 'ssserver', 'crontab']
 
   const res = {

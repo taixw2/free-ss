@@ -1,16 +1,12 @@
-const fs = require('fs')
-const { commSql } = require('./sql/conn.js')
+import fs from 'fs'
+import { commSql } from './sql/conn.js'
 
-exports.loadSqlFile = (sqlPath) => {
 
+export const loadSqlFile = (sqlPath) => {
   return new Promise((resolve, reject) => {
-
     fs.readFile(sqlPath, (err, data) => {
-
       if (err) reject(err)
-
       const sqls = data.toString().split(';')
-
       sqls.forEach(async (sql) => {
         try{
           await commSql(sql)
@@ -19,10 +15,7 @@ exports.loadSqlFile = (sqlPath) => {
           reject(e)
         }
       })
-
       resolve()
     })    
-
   })
-
 }

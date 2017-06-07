@@ -1,9 +1,12 @@
-const fs = require('fs')
-const path = require("path")
-const { connection, query } = require("../../sql/conn.js")
-const { loadSqlFile } = require("../../commons.js")
+import fs from 'fs'
+import path from 'path'
 
-module.exports = (conf) => {
+import { connection, query } from '../../sql/conn.js'
+import { loadSqlFile } from '../../commons.js'
+
+import Sql from '../../sql/sql.js'
+
+export default (conf) => {
 
   /**
    * 加载sql文件
@@ -21,9 +24,13 @@ module.exports = (conf) => {
   return new Promise(async (resolve, reject) => {
     try{
 
+      const conn = await connection({
+        host: conf.host,
+        database: conf.database,
+        user: conf.user,
+        password: conf.password,
+      })
       
-
-      const conn = await connection(conf)
 
       if (!conf.database) {
         const database = `free_ss_${Date.now().toString(16)}`
@@ -34,7 +41,16 @@ module.exports = (conf) => {
         await source()
       }
 
-      // await query(conn, 'insert ')
+      (new Sql(conn, 'user'))
+      .insert({
+        user_id: (Date.now() * Math.floor(Math.random() * 100)).toString().substr(0, 10),
+        user_type: 999,
+        reg_time: Date.now(),
+        last_login_time: 0,
+        user: conf.adminuser,
+        password: conf.adminpasswd,
+      })
+      .query()
 
       conn.end()
 
