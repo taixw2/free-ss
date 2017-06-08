@@ -30,8 +30,14 @@ router.get('/install-step2', async (ctx) => {
  * 第二步提交表单
  */
 router.post('/install-step2', async (ctx) => {
-  const result = await step1(ctx.request.body)
-  await ctx.redirect('/install/install-step3')
+  try {
+    const result = await step1(ctx.request.body)
+  } catch(e) {
+    console.log(e)
+  }
+  
+  ctx.body = 1
+
 })
 
 /**

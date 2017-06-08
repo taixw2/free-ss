@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { connection, query } from '../../sql/conn.js'
-import { loadSqlFile } from '../../commons.js'
+import { ImportSQL }  from '../../lib/ImportSQL.js'
 
 import Sql from '../../sql/sql.js'
 
@@ -14,7 +14,21 @@ export default (conf) => {
    * @param {*} callback 
    */
   function source(conn) {
-    return loadSqlFile(path.resolve(__dirname, '../../sql/free-ss.sql'))
+
+    return new ImportSQL(path.resolve(__dirname, '../../sql/free-ss.sql'), conn)
+  }
+
+  /**
+   * 把配置写到配置文件中
+   * @param {Object} config 
+   */
+  function insertConf(config) {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(path.resolve(__dirname, '../../sql/conf.json'), JSON.stringify(config), (err) => {
+        if (err) reject(err)
+        resolve()
+      })
+    })
   }
 
   /**
@@ -24,42 +38,46 @@ export default (conf) => {
   return new Promise(async (resolve, reject) => {
     try{
 
-      const conn = await connection({
+      const database = `free_ss_${Date.now().toString(16)}`
+
+      const connectionObject = {
         host: conf.host,
         database: conf.database,
         user: conf.user,
         password: conf.password,
-      })
-      
-
-      if (!conf.database) {
-        const database = `free_ss_${Date.now().toString(16)}`
-        await query(conn, `create database ${database}`)
-        await source()
-        conf.database = database
-      } else {
-        await source()
       }
 
-      (new Sql(conn, 'user'))
-      .insert({
-        user_id: (Date.now() * Math.floor(Math.random() * 100)).toString().substr(0, 10),
-        user_type: 999,
-        reg_time: Date.now(),
-        last_login_time: 0,
-        user: conf.adminuser,
-        password: conf.adminpasswd,
-      })
-      .query()
+      const conn = await connection(connectionObject)
 
-      conn.end()
+      console.log('here1')
 
-      fs.writeFile(path.resolve(__dirname, '../../sql/conf.json'), JSON.stringify(conf), (err) => {
-        if (err) reject(err)
-        resolve()
-      })
+      if (!conf.database) {
+        await query(conn, `create database ${database}`)
+        conf.database = database
+        await insertConf(connectionObject)
+        await source(connectionObject)
+      } else {
+        await insertConf(connectionObject)
+        await source(connectionObject)
+      }
+
+      // (new Sql(conn, 'user'))
+      // .insert({
+      //   user_id: (Date.now() * Math.floor(Math.random() * 100)).toString().substr(0, 10),
+      //   user_type: 999,
+      //   reg_time: Date.now(),
+      //   last_login_time: 0,
+      //   user: conf.adminuser,
+      //   password: conf.adminpasswd,
+      // })
+      // .query()
+      // conn.end()
+
+      resolve('success')
       
     } catch(e) {
+      console.log('here2')
+      console.log(e)
       reject(e)
     }
   })
@@ -67,3 +85,7 @@ export default (conf) => {
 
 
 }
+
+
+
+
