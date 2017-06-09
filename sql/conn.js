@@ -1,4 +1,4 @@
-import _ from 'lodash'
+// import _ from 'lodash'
 import mysql from 'mysql'
 import { mysqlConf } from './conf.js'
 
@@ -52,7 +52,6 @@ export function query(query) {
         if (queryError) {
           reject(queryError)
         }
-        console.log(query)
         resolve(rows)
       })
     })

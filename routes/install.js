@@ -1,11 +1,16 @@
 import Router from 'koa-router'
-import shelljs from 'shelljs'
+// import shelljs from 'shelljs'
 
-import step0 from './install/step0.js'
-import step1 from './install/step1.js'
+// import step0 from './install/step0.js'
+// import step1 from './install/step1.js'
 
+import InstallController from '../controllers/InstallController.js'
+
+import { SUCCESS } from '../config/CONSTANT.js'
 
 const router = Router()
+const install = new InstallController()
+
 
 
 router.prefix('/install')
@@ -14,8 +19,8 @@ router.prefix('/install')
 /**
  * 安装首页
  */
-router.get('/', async (ctx, next) => {
-  await ctx.render('install', step0())
+router.get('/', async (ctx) => {
+  await ctx.render('install', install.step1())
 })
 
 
@@ -30,20 +35,12 @@ router.get('/install-step2', async (ctx) => {
  * 第二步提交表单
  */
 router.post('/install-step2', async (ctx) => {
-  try {
-    const result = await step1(ctx.request.body)
-  } catch(e) {
-    console.log(e)
+  const result = await install.step2()
+  if (result.ec === SUCCESS) {
+    ctx.body = 1
+  } else {
+    await ctx.render('error', result)
   }
-  
-  ctx.body = 1
-
-})
-
-/**
- * 第三步
- */
-router.get('/install-step3', async (ctx) => {
 
 })
 

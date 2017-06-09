@@ -1,9 +1,11 @@
 {
     "env": {
         "es6": true,
-        "node": true
+        "node": true,
+        "commonjs": true
     },
     "extends": "eslint:recommended",
+    "parser": "babel-eslint",
     "parserOptions": {
         "sourceType": "module"
     },
@@ -23,6 +25,7 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "no-console":"off"
     }
 }

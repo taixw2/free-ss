@@ -31,7 +31,7 @@ export default class Sql {
    */
   insert(queryParam, table) {
 
-    table = this.genTable(table)
+    const insertOnTable = this.genTable(table)
 
     if (!_.isPlainObject(queryParam)) return
 
@@ -45,7 +45,7 @@ export default class Sql {
 
     this.sqls.push({
       type: 'insert',
-      sql: `INSERT INTO ${this.table} (${fields.join(',')}) VALUES (${values.join(',')})`,
+      sql: `INSERT INTO ${insertOnTable} (${fields.join(',')}) VALUES (${values.join(',')})`,
       result: null,
     })
 
@@ -58,10 +58,10 @@ export default class Sql {
    * @param {String} table 
    */
   del(table) {
-    table = this.genTable(table)
+    const deleteOnTable = this.genTable(table)
     this.sqls.push({
       type: 'delete',
-      sql: `DELETE FROM ${table}`,
+      sql: `DELETE FROM ${deleteOnTable}`,
       result: null,
     })
   }
@@ -73,7 +73,7 @@ export default class Sql {
    */
   update(queryParam, table) {
     
-    table = this.genTable(table)
+    const updateOnTable = this.genTable(table)
 
     if (!_.isPlainObject(queryParam)) return
 
@@ -83,7 +83,7 @@ export default class Sql {
 
     this.sqls.push({
       type: 'update',
-      sql: `UPDATE ${table} ${queryFields}`,
+      sql: `UPDATE ${updateOnTable} ${queryFields}`,
       result: null,
     })
 
@@ -95,7 +95,7 @@ export default class Sql {
    */
   select(queryParam, table) {
 
-    table = this.genTable(table)
+    const selectOnTable = this.genTable(table)
 
     queryParam = this.escape(queryParam)
 
@@ -105,7 +105,7 @@ export default class Sql {
 
     this.sqls.push({
       type: 'select',
-      sql: `SELECT ${queryParam} FROM ${table}`,
+      sql: `SELECT ${queryParam} FROM ${selectOnTable}`,
       result: null,
     })
 
@@ -118,7 +118,23 @@ export default class Sql {
    * @param {String,Array,Object} queryParam 
    */
   where(queryParam) {
-    this.lastSqlJoin(genWhere(queryParam))
+
+    let whereParam = queryParam
+
+    if (arguments.length === 2) {
+      whereParam = {
+        [arguments[0]]: arguments[1]
+      }
+    }
+
+    if (arguments.length === 3) {
+      whereParam = {
+        [arguments[0]]: arguments[2],
+        _type: arguments[1],
+      }
+    }
+
+    this.lastSqlJoin(this.genWhere(whereParam))
   }
 
   /**
@@ -130,7 +146,7 @@ export default class Sql {
 
     if (_.isArray(queryParam)) {
       return _.map(queryParam, (value) => {
-        return genWhere(value)
+        return this.genWhere(value)
       }).join(',')
     }
 
@@ -170,17 +186,18 @@ export default class Sql {
    * 查询
    */
   query() {
-    const error = []
-    const allResult = _.map(this.sqls, async (v) => {
-      try {
-        console.log(v.sql)
-        return await this.conn.query(v.sql)
-      } catch(e) {
-        error.push(e)
-        return null
-      }
-    })
-    return { value: _.last(allResult), allResult, error }
+
+    return Promise.all(_.map(this.sqls, (v) => {
+      return new Promise((resolve, reject) => {
+        this.conn.query(v, (err, rows) => {
+          if (err) {
+            reject(err)
+          } else{
+            resolve(rows)
+          }
+        })
+      })
+    }))
   }
 
   /**
