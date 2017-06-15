@@ -1,0 +1,18 @@
+include layout
+
+block content
+  h1 注册开始
+  form(action="/auth/regist" method="POST")
+    input(type="text" placeholder="请输入用户名" name='user')
+    br
+    br
+    input(type="password" placeholder="请输入密码" name='password')
+    br
+    br
+    input(type="text" placeholder="请输入验证码" name='vercode')
+    img(src="/auth/vercode?" + token, alt="", onclick="this.src='/auth/vercode?' + Math.random()")
+    br
+    br
+    button(type="submit") 注册 
+    button(type="button" onclick="location.href='/auth/login'") 登录  
+

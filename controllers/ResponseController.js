@@ -1,4 +1,4 @@
-import { SUCCESS, PARAM_MISS, SERVER_ERROR, NO_PERMISSION, PASSWORD_FAIL, USER_FAIL } from '../config/CONSTANT.js'
+import { SUCCESS, PARAM_MISS, SERVER_ERROR, NO_PERMISSION, PASSWORD_FAIL, USER_FAIL, CODE_FAIL } from '../config/CONSTANT.js'
 
 const ERROR_MAP = {
   [SUCCESS]: 'ok',
@@ -7,6 +7,7 @@ const ERROR_MAP = {
   [NO_PERMISSION]: '没有权限',
   [PASSWORD_FAIL]: '密码错误',
   [USER_FAIL]: '账号错误',
+  [CODE_FAIL]: '验证码错误',
 }
 
 export default (code, data) => {

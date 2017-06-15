@@ -52,7 +52,7 @@ export function query(query) {
         if (queryError) {
           reject(queryError)
         }
-        resolve(rows)
+        resolve(rows[0])
       })
     })
 

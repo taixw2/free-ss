@@ -6,8 +6,6 @@ import Router from 'koa-router'
 
 import InstallController from '../controllers/InstallController.js'
 
-import { SUCCESS } from '../config/CONSTANT.js'
-
 const router = Router()
 const install = new InstallController()
 
@@ -35,9 +33,9 @@ router.get('/install-step2', async (ctx) => {
  * 第二步提交表单
  */
 router.post('/install-step2', async (ctx) => {
-  const result = await install.step2()
-  if (result.ec === SUCCESS) {
-    ctx.body = 1
+  const result = await install.step2(ctx.request.body)
+  if (result === true) {
+    ctx.redirect('/')
   } else {
     await ctx.render('error', result)
   }

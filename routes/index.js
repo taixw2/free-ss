@@ -1,35 +1,27 @@
-import fs from 'fs'
 import path from 'path'
 import Router from 'koa-router'
+import { fileExist } from '../lib/util.js'
 
 const router = Router()
 
-router.get('/', async (ctx, next) => {
+router.get('/', async (ctx) => {
 
-
-  await (new Promise((resolve, reject) => {
-    fs.stat(path.resolve(__dirname, 'installed.lock'), (err, stat) => {
-      if (err.code === 'ENOENT') {
-        reject(err.code)
-      } else {
-        resolve()
-      }
-    })
-  }))
-  .then(() => {
+  try {
+    await fileExist(path.resolve(__dirname, '../installed.lock'))
     return ctx.render('index', {
       title: 'Hello koa2'
-    })
-  }, () => {
+    })    
+  } catch(e) {
     return ctx.redirect('/install/')
-  })
+  }
+
 })
 
-router.get('/string', async (ctx, next) => {
+router.get('/string', async (ctx) => {
   ctx.body = 'koa2 string'
 })
 
-router.get('/json', async (ctx, next) => {
+router.get('/json', async (ctx) => {
   ctx.body = {
     title: 'koa2 json'
   }

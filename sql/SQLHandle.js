@@ -1,16 +1,14 @@
 import _ from 'lodash'
 import mysql from 'mysql'
-
+import { query } from './conn.js'
 
 export default class Sql {
 
   /**
    * sql构造器
-   * @param {*} conn mysql连接对象
    * @param {*} table 要操作的数据表
    */
-  constructor(conn, table) {
-    this.conn = conn
+  constructor(table) {
     this.table = table
     this.sqls = []
     // 前期规定必须绝对顺序 如: select(xxx).where({ userid: 0 }).limit(0, 5)
@@ -97,7 +95,7 @@ export default class Sql {
 
     const selectOnTable = this.genTable(table)
 
-    queryParam = this.escape(queryParam)
+    // queryParam = this.escape(queryParam)
 
     if (_.isArray(queryParam)) {
       queryParam = queryParam.join(',')
@@ -134,7 +132,10 @@ export default class Sql {
       }
     }
 
-    this.lastSqlJoin(this.genWhere(whereParam))
+
+    this.lastSqlJoin(`WHERE ${this.genWhere(whereParam)}`)
+
+    return this
   }
 
   /**
@@ -153,9 +154,9 @@ export default class Sql {
     if (_.isPlainObject(queryParam)) {
       return _.map(queryParam, (value, key) => {
         if (key !== '_type') {
-          return [key, queryParam['_type'] || '=', value ].join('')
+          return `${key} ${queryParam['_type'] || '='} ${this.escape(value)}`
         }
-      })
+      }).join('')
     }
   }
 
@@ -189,13 +190,10 @@ export default class Sql {
 
     return Promise.all(_.map(this.sqls, (v) => {
       return new Promise((resolve, reject) => {
-        this.conn.query(v, (err, rows) => {
-          if (err) {
-            reject(err)
-          } else{
-            resolve(rows)
-          }
-        })
+        console.log(v.sql)
+        query(v.sql)
+        .then(resolve)
+        .catch(reject)
       })
     }))
   }
@@ -207,7 +205,7 @@ export default class Sql {
     const lastSql = _.last(this.sqls)
     if (!lastSql || lastSql.type === 'insert') return
 
-    lastSql.sql = `${lastSql.sql} ${query}}`
+    lastSql.sql = `${lastSql.sql} ${query}`
   }
 
   /**
@@ -215,7 +213,7 @@ export default class Sql {
    * @param {Array, String} tables 
    */
   genTable(tables) {
-    tables = tables || this.tables
+    tables = tables || this.table
     return _.isArray(tables) ? tables.join(',') : tables
   }
 

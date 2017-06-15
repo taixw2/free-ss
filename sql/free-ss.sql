@@ -33,12 +33,13 @@ CREATE TABLE `node` (
 -- -- -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `user_id` int(13) NOT NULL,
+  `user_id` bigint(13) NOT NULL,
   `user_type` int(2) NOT NULL DEFAULT '1',
-  `reg_time` int(15) DEFAULT NULL,
-  `last_login_time` int(15) DEFAULT NULL,
+  `reg_time` bigint(15) DEFAULT NULL,
+  `last_login_time` bigint(15) DEFAULT NULL,
   `user` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `auth_code` varchar(255) DEFAULT 0,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

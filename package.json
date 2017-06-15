@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node bin/runkoa",
-    "dev": "./node_modules/.bin/nodemon bin/runkoa",
+    "dev": "./node_modules/.bin/nodemon bin/runkoa --ignore sql/conf.json",
     "prd": "pm2 start bin/runkoa",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,14 +19,17 @@
     "koa-logger": "^2.0.1",
     "koa-onerror": "^1.2.1",
     "koa-router": "^7.1.1",
+    "koa-session": "^4.1.0",
     "koa-static": "^3.0.0",
     "koa-views": "^5.2.1",
     "lodash": "^4.17.4",
+    "md5": "^2.2.1",
     "mysql": "^2.13.0",
     "node-mysql-importer": "0.0.10",
     "pug": "^2.0.0-rc.1",
     "runkoa": "^1.5.9",
-    "shelljs": "^0.7.7"
+    "shelljs": "^0.7.7",
+    "trek-captcha": "^0.3.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

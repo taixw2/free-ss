@@ -4,10 +4,13 @@ import shelljs from 'shelljs'
 import ValidatorJSON from '../lib/ValidatorJSON.js'
 import ImportSQL from '../lib/ImportSQL.js'
 import response from './ResponseController.js'
-import Model from '../sql/sql.js'
+import AuthController from './AuthController.js'
 
-import { PARAM_MISS, SERVER_ERROR, SUCCESS } from '../config/CONSTANT.js'
-import { connection, query } from '../sql/conn.js'
+import { PARAM_MISS, SERVER_ERROR } from '../config/CONSTANT.js'
+import { query } from '../sql/conn.js'
+
+const auth = new AuthController()
+
 
 /**
  * 把配置写到配置文件中
@@ -15,7 +18,7 @@ import { connection, query } from '../sql/conn.js'
  */
 function insertConf(config) {
   return new Promise((resolve, reject) => {
-    fs.writeFile(path.resolve(__dirname, '../../sql/conf.json'), JSON.stringify(config), (err) => {
+    fs.writeFile(path.resolve(__dirname, '../sql/conf.json'), JSON.stringify(config), (err) => {
       if (err) reject(err)
       resolve()
     })
@@ -27,9 +30,13 @@ function insertConf(config) {
  * @param {*} conn mysql  
  * @param {*} callback 
  */
-function source(conn) {
-
-  return new ImportSQL(path.resolve(__dirname, '../../sql/free-ss.sql'), conn)
+async function source(config) {
+  try {
+    const importSql = new ImportSQL(path.resolve(__dirname, '../sql/free-ss.sql'))
+    await importSql.createConnectionConfig(config).importSQL()
+  } catch(e) {
+    console.log(e)
+  }
 }
 
 export default class InstallControll{
@@ -92,49 +99,55 @@ export default class InstallControll{
       password: requestBody.password,
     }
 
-    const conn = await connection(connectionObject)
     
     // 创建数据库/ 把sql文件导入到数据库中
     try {
+
       if (!connectionObject.database) {
         const database = `free_ss_${Date.now().toString(16)}`
-        await query(conn, `create database ${database}`)
+        await query(`create database ${database}`)
         connectionObject.database = database
-        await insertConf(connectionObject)
-        await source(connectionObject)
-      } else {
-        await insertConf(connectionObject)
-        await source(connectionObject)
       }
+
     } catch(e) {
-      console.log(e)
       return response(SERVER_ERROR, e)
     }
-
-    const User = new Model(conn, 'user')
 
     try {
-      await User.insert({
-        user_id: +((Date.now() * Math.floor(Math.random() * 100)).toString().substr(0, 10)),
-        user_type: 999,
-        reg_time: ~~(Date.now() / 1000),
-        last_login_time: 0,
-        user: requestBody.adminuser,
-        password: requestBody.adminpasswd,      
-      })
-      .query()
-      conn.release()
+      await insertConf(connectionObject)
     } catch(e) {
-      conn.release()
-      console.log(e)
+      return response(SERVER_ERROR, e)
+    }
+    
+    try {
+      await source(connectionObject)
+    } catch(e) {
       return response(SERVER_ERROR, e)
     }
 
-    return response(SUCCESS)
-    
+    const registResult = await auth.regist(requestBody.adminuser, requestBody.adminpassword, 999)
 
+    if (registResult !== true) {
+      return registResult
+    }
 
+    try {
+      await this.writeSuccessLock()
+    } catch(e) {
+      return response(SERVER_ERROR, e)
+    }
 
+    return true    
+
+  }
+
+  writeSuccessLock() {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(path.resolve(__dirname, '../installed.lock'), '', (err) => {
+        if (err) reject(err)
+        resolve()
+      })
+    })
   }
 
 }
