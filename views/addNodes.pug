@@ -1,0 +1,38 @@
+extends layout
+
+block content
+
+  h1=state === 'success' ? '操作成功' : ''
+  br 
+  br 
+  h2 添加节点组
+    form(action="/addNodes/addGroup", method="post")  
+      input(type="text" name="groupName" placeholder="请输入节点组名称")
+      br
+      button 提交
+  
+  h2 添加节点
+    form(action="/addNodes/addNode", method="post")
+      input(type="text" name="nodeName" placeholder="请输入节点名称")
+      br
+      br
+      input(type="text" name="host" placeholder="请输入节点IP/地址")
+      br
+      br      
+      input(type="text" name="sort" placeholder="请输入节点序号（用于排序）")
+      br
+      br
+      input(type="text" name="isShow" placeholder="是否显示该节点")
+      br
+      br
+      textarea(name="desc", placeholder="请输入节点描述")
+      br
+      br
+      select(name="nodeGroup")
+        each a in [6,8]
+          option=a
+      br
+      br
+      button 提交
+
+  h2 节点列表    

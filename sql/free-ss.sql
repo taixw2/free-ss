@@ -25,6 +25,7 @@ CREATE TABLE `node` (
   `host` varchar(255) DEFAULT NULL,
   `port` int(11) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `node_group` int(30) DEFAULT NULL,
   `encryption` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -41,6 +42,16 @@ CREATE TABLE `user` (
   `password` varchar(255) DEFAULT NULL,
   `auth_code` varchar(255) DEFAULT 0,
   PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- -- -- ----------------------------
+-- -- -- Table structure for node-group
+-- -- -- ----------------------------
+DROP TABLE IF EXISTS `node_group`;
+CREATE TABLE `node_group` (
+  `node_group_id` bigint(13) NOT NULL,
+  `node_group_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`node_group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

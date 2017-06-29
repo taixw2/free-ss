@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "debug": "^2.6.3",
+    "flow-bin": "^0.49.1",
+    "flow-typed": "^2.1.2",
     "font-awesome.css": "^4.7.2",
     "formidable": "^1.1.1",
     "koa": "^2.2.0",
@@ -33,6 +35,7 @@
     "trek-captcha": "^0.3.0"
   },
   "devDependencies": {
+    "@anvilabs/flow-libdefs": "^1.2.4",
     "babel-eslint": "^7.2.3",
     "nodemon": "^1.8.1"
   }

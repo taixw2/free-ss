@@ -58,7 +58,7 @@ router.post('/regist', async (ctx) => {
   if (registResult === true) {
     await ctx.redirect('/auth/login')
   } else {
-    await ctx.render('error', registResult)
+    await ctx.render('error', registResult) 
   }
 
 })
@@ -70,7 +70,6 @@ router.get('/vercode', async (ctx) => {
   const buf = await genCode(ctx)
   ctx.body = buf
 })
-
 
 
 /**
