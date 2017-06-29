@@ -1,0 +1,48 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Users\\mro\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'flow' ]
+2 info using npm@4.0.3
+3 info using node@v6.10.3
+4 verbose run-script [ 'preflow', 'flow', 'postflow' ]
+5 info lifecycle free-ss@0.1.0~preflow: free-ss@0.1.0
+6 silly lifecycle free-ss@0.1.0~preflow: no script for preflow, continuing
+7 info lifecycle free-ss@0.1.0~flow: free-ss@0.1.0
+8 verbose lifecycle free-ss@0.1.0~flow: unsafe-perm in lifecycle true
+9 verbose lifecycle free-ss@0.1.0~flow: PATH: C:\Users\mro\AppData\Roaming\npm\node_modules\npm\bin\node-gyp-bin;C:\Users\mro\coding\free-ss\node_modules\.bin;C:\Program Files (x86)\Git\mingw32\bin;C:\Program Files (x86)\Git\usr\bin;C:\Users\mro\bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\Git\usr\bin;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Vim\vim74;E:\迅雷下载\nwjs-v0.19.1-win-x64;C:\wamp\bin\mysql\mysql5.6.17;C:\Program Files (x86)\Yarn\bin;D:\wamp\bin\php\php5.5.12;C:\Users\mro\AppData\Roaming\Composer\vendor\bin;C:\Users\mro\Downloads\nwjs-v0.22.0-win-x64;D:\wamp\bin\mysql\mysql5.6.17\bin;C:\Program Files (x86)\Vim\vim80;C:\Users\mro\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\nodejs;C:\Users\mro\AppData\Local\atom\bin;C:\Users\mro\AppData\Local\Yarn\.bin;C:\Users\mro\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\mro\AppData\Roaming\npm;C:\Program Files (x86)\Microsoft VS Code\bin
+10 verbose lifecycle free-ss@0.1.0~flow: CWD: C:\Users\mro\coding\free-ss
+11 silly lifecycle free-ss@0.1.0~flow: Args: [ '/d /s /c', 'flow check' ]
+12 silly lifecycle free-ss@0.1.0~flow: Returned: code: 2  signal: null
+13 info lifecycle free-ss@0.1.0~flow: Failed to exec flow script
+14 verbose stack Error: free-ss@0.1.0 flow: `flow check`
+14 verbose stack Exit status 2
+14 verbose stack     at EventEmitter.<anonymous> (C:\Users\mro\AppData\Roaming\npm\node_modules\npm\lib\utils\lifecycle.js:279:16)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at EventEmitter.emit (events.js:191:7)
+14 verbose stack     at ChildProcess.<anonymous> (C:\Users\mro\AppData\Roaming\npm\node_modules\npm\lib\utils\spawn.js:40:14)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at ChildProcess.emit (events.js:191:7)
+14 verbose stack     at maybeClose (internal/child_process.js:886:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+15 verbose pkgid free-ss@0.1.0
+16 verbose cwd C:\Users\mro\coding\free-ss
+17 error Windows_NT 6.1.7601
+18 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Users\\mro\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js" "run" "flow"
+19 error node v6.10.3
+20 error npm  v4.0.3
+21 error code ELIFECYCLE
+22 error free-ss@0.1.0 flow: `flow check`
+22 error Exit status 2
+23 error Failed at the free-ss@0.1.0 flow script 'flow check'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the free-ss package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     flow check
+23 error You can get information on how to open an issue for this project with:
+23 error     npm bugs free-ss
+23 error Or if that isn't available, you can get their info via:
+23 error     npm owner ls free-ss
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]
