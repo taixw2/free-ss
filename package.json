@@ -37,6 +37,8 @@
   "devDependencies": {
     "@anvilabs/flow-libdefs": "^1.2.4",
     "babel-eslint": "^7.2.3",
+    "babel-plugin-syntax-flow": "^6.18.0",
+    "babel-preset-flow": "^6.23.0",
     "nodemon": "^1.8.1"
   }
 }
